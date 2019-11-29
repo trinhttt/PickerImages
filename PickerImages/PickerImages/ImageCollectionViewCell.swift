@@ -7,9 +7,24 @@
 //
 
 import UIKit
+import Photos
 
 class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var ibImage: UIImageView!
-    
     @IBOutlet weak var ibCheckButton: UIButton!
+    @IBOutlet weak var ibCountNumber: UILabel!
+    
+    override func awakeFromNib() {
+        
+    }
+    
+    func setImage(imageAsset: PHAsset) {
+        let option = PHImageRequestOptions()
+        option.isNetworkAccessAllowed = true
+        option.isSynchronous = true
+        option.deliveryMode = .highQualityFormat
+        PHImageManager.default().requestImage(for: imageAsset, targetSize: CGSize(width: ibImage.frame.size.width, height: ibImage.frame.size.height), contentMode: .aspectFill, options: option, resultHandler: { (image, info) in
+            self.ibImage.image = image
+        })
+    }
 }

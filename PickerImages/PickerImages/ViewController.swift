@@ -15,16 +15,17 @@ class ViewController: UIViewController {
     @IBOutlet weak var ibSelectInfoText: UILabel!
     
     fileprivate var imageAssets = [PHAsset]()
-    var checkIndexArray: [Int] = [Int]()
+    var checkedImageIndexs: [Int] = [Int]()
+    var removedImageIndex = -1
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initNavi()
+        setupNavi()
         setupForCollectionItems(space: 1.5, numberOfItem: 3)
         fetchImagesFromDeviceLibrary()
     }
 
-    func fetchImagesFromDeviceLibrary(){
+    fileprivate func fetchImagesFromDeviceLibrary() {
         PHPhotoLibrary.requestAuthorization { (status) in
             switch status {
             case .authorized:
@@ -33,7 +34,6 @@ class ViewController: UIViewController {
                 for index in 0..<imageAsset.count{
                     self.imageAssets.append((imageAsset[index]))
                 }
-                
                 DispatchQueue.main.async {
                     self.ibCollectionView.delegate = self
                     self.ibCollectionView.dataSource = self
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func setupForCollectionItems(space: CGFloat, numberOfItem: CGFloat){
+    fileprivate func setupForCollectionItems(space: CGFloat, numberOfItem: CGFloat) {
         let screenWidth = UIScreen.main.bounds.width
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: space, left: space, bottom: space, right: space)
@@ -59,38 +59,44 @@ class ViewController: UIViewController {
         ibCollectionView.collectionViewLayout = layout
     }
     
-    func selectItem(at index: Int){
-        if checkIndexArray.contains(index){
-            for i in 0..<checkIndexArray.count{
-                if checkIndexArray[i] == index{
-                    checkIndexArray.remove(at: i)
-                    break
-                }
+    fileprivate func updateCell(at index: Int) {
+        if let removeIndex = checkedImageIndexs.index(of: index) {
+            removedImageIndex = removeIndex
+            for i in removedImageIndex + 1..<checkedImageIndexs.count {
+                removedImageIndex += 1
+                ibCollectionView.reloadItems(at: [IndexPath(row: checkedImageIndexs[i], section: 0)])
             }
+            checkedImageIndexs.remove(at: removeIndex)
+            removedImageIndex = -1
         }else{
-            checkIndexArray.append(index)
-        }
-        if checkIndexArray.count != 0 {
-            ibSelectInfoText.text = "Selected photo: \(checkIndexArray.count)"
-        } else {
-            ibSelectInfoText.text = "Please select photo"
+            checkedImageIndexs.append(index)
         }
         ibCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
     }
     
-    private func initNavi() {
+    fileprivate func updateSelectInfoText() {
+        if checkedImageIndexs.count != 0 {
+            ibSelectInfoText.text = "Selected photo: \(checkedImageIndexs.count)"
+        } else {
+            ibSelectInfoText.text = "Please select photo"
+        }
+    }
+    
+    fileprivate func setupNavi() {
         if let naviController = navigationController {
             let naviBar = naviController.navigationBar
+            naviBar.topItem?.title = "Title"
             naviBar.isTranslucent = false
             naviBar.titleTextAttributes = [.foregroundColor: UIColor.white]
             naviBar.tintColor = .white
             naviBar.barTintColor = #colorLiteral(red: 0.8458752036, green: 0.0433992222, blue: 0.1414211988, alpha: 1)
             naviBar.setBackgroundImage(UIImage(), for: .default)
             naviBar.shadowImage = UIImage()
-            
-            //set title
-            naviBar.topItem?.title = " Title"
         }
+    }
+    
+    @IBAction func ibSelectAllTapped(_ sender: Any) {
+        print(checkedImageIndexs)
     }
 }
 
@@ -101,24 +107,26 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath) as? ImageCollectionViewCell {
-            if checkIndexArray.contains(indexPath.row){
+            if checkedImageIndexs.contains(indexPath.row){
+                if removedImageIndex == -1 { // append new image
+                     cell.ibCountNumber.text = "\(checkedImageIndexs.count)"
+                } else {
+                     cell.ibCountNumber.text = "\(removedImageIndex)"
+                }
+                cell.ibCountNumber.isHidden = false
                 cell.ibCheckButton.backgroundColor = .red
             }else{
+                cell.ibCountNumber.isHidden = true
                 cell.ibCheckButton.backgroundColor = .clear
             }
-            let option = PHImageRequestOptions()
-            option.isNetworkAccessAllowed = true
-            option.isSynchronous = true
-            option.deliveryMode = .highQualityFormat
-            PHImageManager.default().requestImage(for: imageAssets[indexPath.row], targetSize: CGSize(width :cell.ibImage.frame.size.width, height : cell.ibImage.frame.size.height), contentMode: .aspectFill, options: option, resultHandler: { (image, info) in
-                cell.ibImage.image = image
-            })
+            cell.setImage(imageAsset: imageAssets[indexPath.row])
             return cell
         }
         return UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selectItem(at: indexPath.row)
+        updateCell(at: indexPath.row)
+        updateSelectInfoText()
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vmf-Ed-06a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vmf-Ed-06a">
     <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -49,11 +49,20 @@
                                         <rect key="frame" x="184" y="10" width="46" height="30"/>
                                         <state key="normal" title="Button"/>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mdk-Rl-5V0">
+                                        <rect key="frame" x="336" y="10" width="63" height="30"/>
+                                        <state key="normal" title="Select all"/>
+                                        <connections>
+                                            <action selector="ibSelectAllTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ykP-ka-NdX"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="5LF-nc-JHL" firstAttribute="centerY" secondItem="jNC-AA-1AA" secondAttribute="centerY" id="2C2-ZH-eJU"/>
                                     <constraint firstItem="5LF-nc-JHL" firstAttribute="centerX" secondItem="jNC-AA-1AA" secondAttribute="centerX" id="Laq-7T-ssJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="Mdk-Rl-5V0" secondAttribute="trailing" constant="15" id="RnQ-ft-Y2g"/>
+                                    <constraint firstItem="Mdk-Rl-5V0" firstAttribute="centerY" secondItem="jNC-AA-1AA" secondAttribute="centerY" id="Ykp-j5-xGe"/>
                                     <constraint firstAttribute="height" constant="50" id="zkg-ry-WDV"/>
                                 </constraints>
                             </view>
@@ -76,7 +85,6 @@
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Czk-vF-lnf">
                                                     <rect key="frame" x="0.0" y="0.0" width="127" height="135"/>
-                                                    <color key="backgroundColor" red="0.99953407049999998" green="0.98835557699999999" blue="0.47265523669999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="alG-vK-t69">
                                                     <rect key="frame" x="91" y="6" width="30" height="30"/>
@@ -84,6 +92,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="ifJ-eS-PV3"/>
                                                         <constraint firstAttribute="width" constant="30" id="mUO-IT-cc9"/>
                                                     </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                             <real key="value" value="15"/>
@@ -96,18 +105,31 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Swr-3u-SN0">
+                                                    <rect key="frame" x="101" y="10.5" width="10.5" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="10.5" id="LCK-l4-Zw8"/>
+                                                        <constraint firstAttribute="height" constant="21" id="aKA-9d-vi1"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="alG-vK-t69" firstAttribute="top" secondItem="g8T-V1-CBs" secondAttribute="top" constant="6" id="9Wb-t8-S5j"/>
                                             <constraint firstAttribute="trailing" secondItem="alG-vK-t69" secondAttribute="trailing" constant="6" id="FeC-bo-obw"/>
+                                            <constraint firstItem="Swr-3u-SN0" firstAttribute="centerY" secondItem="alG-vK-t69" secondAttribute="centerY" id="GSy-Wb-pTo"/>
                                             <constraint firstAttribute="bottom" secondItem="Czk-vF-lnf" secondAttribute="bottom" id="IuY-Nm-yNM"/>
                                             <constraint firstItem="Czk-vF-lnf" firstAttribute="top" secondItem="g8T-V1-CBs" secondAttribute="top" id="Kiz-UT-se2"/>
+                                            <constraint firstItem="Swr-3u-SN0" firstAttribute="centerX" secondItem="alG-vK-t69" secondAttribute="centerX" id="iyw-Em-3q2"/>
                                             <constraint firstItem="Czk-vF-lnf" firstAttribute="leading" secondItem="g8T-V1-CBs" secondAttribute="leading" id="kmv-WH-3UJ"/>
                                             <constraint firstAttribute="trailing" secondItem="Czk-vF-lnf" secondAttribute="trailing" id="uh5-fF-AtY"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="ibCheckButton" destination="alG-vK-t69" id="iqW-bu-dOL"/>
+                                            <outlet property="ibCountNumber" destination="Swr-3u-SN0" id="8fP-2e-TVK"/>
                                             <outlet property="ibImage" destination="Czk-vF-lnf" id="vSX-WP-inc"/>
                                         </connections>
                                     </collectionViewCell>
