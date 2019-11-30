@@ -14,9 +14,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var ibCheckButton: UIButton!
     @IBOutlet weak var ibCountNumber: UILabel!
     
-    override func awakeFromNib() {
-        
-    }
+    var checkActionHandler: ((Int) -> Void)?
     
     func setImage(imageAsset: PHAsset) {
         let option = PHImageRequestOptions()
@@ -27,4 +25,11 @@ class ImageCollectionViewCell: UICollectionViewCell {
             self.ibImage.image = image
         })
     }
+    
+    @IBAction func ibCheckTapped(_ sender: Any) {
+        let index = (sender as! UIButton).tag
+        checkActionHandler?(index)
+    }
+    
+    
 }

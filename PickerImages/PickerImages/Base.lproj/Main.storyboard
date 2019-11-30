@@ -46,8 +46,8 @@
                                 <rect key="frame" x="0.0" y="139" width="414" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5LF-nc-JHL">
-                                        <rect key="frame" x="184" y="10" width="46" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                        <rect key="frame" x="158.5" y="10" width="97" height="30"/>
+                                        <state key="normal" title="Choose folder"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mdk-Rl-5V0">
                                         <rect key="frame" x="336" y="10" width="63" height="30"/>
@@ -104,6 +104,9 @@
                                                             <real key="value" value="1"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="ibCheckTapped:" destination="g8T-V1-CBs" eventType="touchUpInside" id="kFd-4d-RnF"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Swr-3u-SN0">
                                                     <rect key="frame" x="101" y="10.5" width="10.5" height="21"/>
@@ -201,7 +204,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1047.8260869565217" y="103.79464285714285"/>
+            <point key="canvasLocation" x="1014" y="749"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Rdg-t5-cAf">
