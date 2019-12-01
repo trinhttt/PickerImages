@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0ED295482393CA5D00C3602F /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED295472393CA5D00C3602F /* UIColor+Extensions.swift */; };
+		0ED2954B2393F2C500C3602F /* ImageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED2954A2393F2C500C3602F /* ImageProvider.swift */; };
 		0EE54F5623900E01002168A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE54F5523900E01002168A1 /* AppDelegate.swift */; };
 		0EE54F5823900E01002168A1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE54F5723900E01002168A1 /* ViewController.swift */; };
 		0EE54F5B23900E01002168A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE54F5923900E01002168A1 /* Main.storyboard */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0ED295472393CA5D00C3602F /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		0ED2954A2393F2C500C3602F /* ImageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProvider.swift; sourceTree = "<group>"; };
 		0EE54F5223900E00002168A1 /* PickerImages.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PickerImages.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EE54F5523900E01002168A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EE54F5723900E01002168A1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -41,6 +45,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0ED295462393CA1B00C3602F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0ED295472393CA5D00C3602F /* UIColor+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		0ED295492393F26F00C3602F /* Provider */ = {
+			isa = PBXGroup;
+			children = (
+				0ED2954A2393F2C500C3602F /* ImageProvider.swift */,
+			);
+			path = Provider;
+			sourceTree = "<group>";
+		};
+		0ED2954C2393F44000C3602F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0EE54F5723900E01002168A1 /* ViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		0EE54F4923900E00002168A1 = {
 			isa = PBXGroup;
 			children = (
@@ -60,8 +88,10 @@
 		0EE54F5423900E00002168A1 /* PickerImages */ = {
 			isa = PBXGroup;
 			children = (
+				0ED295492393F26F00C3602F /* Provider */,
+				0ED295462393CA1B00C3602F /* Extensions */,
+				0ED2954C2393F44000C3602F /* Controllers */,
 				0EE54F5523900E01002168A1 /* AppDelegate.swift */,
-				0EE54F5723900E01002168A1 /* ViewController.swift */,
 				0EE54F5923900E01002168A1 /* Main.storyboard */,
 				0EE54F5F23900E02002168A1 /* Assets.xcassets */,
 				0EE54F6123900E02002168A1 /* LaunchScreen.storyboard */,
@@ -145,9 +175,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EE54F6D23901F89002168A1 /* Extensions.swift in Sources */,
+				0ED295482393CA5D00C3602F /* UIColor+Extensions.swift in Sources */,
 				0EE54F5823900E01002168A1 /* ViewController.swift in Sources */,
 				0EE54F5623900E01002168A1 /* AppDelegate.swift in Sources */,
 				0EE54F6B2390137D002168A1 /* ImageCollectionViewCell.swift in Sources */,
+				0ED2954B2393F2C500C3602F /* ImageProvider.swift in Sources */,
 				0EE54F5E23900E01002168A1 /* PickerImages.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

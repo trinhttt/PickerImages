@@ -36,15 +36,18 @@ class ViewController: UIViewController {
             naviBar.topItem?.title = "Title"
             naviBar.isTranslucent = false
             naviBar.titleTextAttributes = [.foregroundColor: UIColor.white]
+            // Bar button color
             naviBar.tintColor = .white
-            naviBar.barTintColor = #colorLiteral(red: 0.8458752036, green: 0.0433992222, blue: 0.1414211988, alpha: 1)
+            // Navigation background color
+            naviBar.barTintColor = UIColor(hexString: "D80B24")
+            // Remove the navigation shadow
             naviBar.setBackgroundImage(UIImage(), for: .default)
             naviBar.shadowImage = UIImage()
         }
         
         // Right bar button
-        let logoutBarButtonItem = UIBarButtonItem(title: "Selected list", style: .done, target: self, action: #selector(selectedListTapped))
-        self.navigationItem.rightBarButtonItem  = logoutBarButtonItem
+        let rightBarButtonItem = UIBarButtonItem(title: "Selected list", style: .done, target: self, action: #selector(selectedListTapped))
+        self.navigationItem.rightBarButtonItem  = rightBarButtonItem
     }
     
     private func setupCollectionItems(space: CGFloat, numberOfItem: CGFloat) {
@@ -59,45 +62,25 @@ class ViewController: UIViewController {
     }
     
     private func fetchImagesFromLibrary() {
-        // Ask for permissions
-        PHPhotoLibrary.requestAuthorization { (status) in
-            switch status {
-            case .authorized:
-                self.getAllImages { [weak self] isExist in
+        ImageProvider.askForPermission { (isAllowed) in
+            if isAllowed {
+                ImageProvider.getAllImages(completion: { [weak self] (assets) in
                     guard let weakSelf = self else { return }
-                    DispatchQueue.main.async {
+                    if let assets = assets {
+                        weakSelf.imageAssets = assets
                         //init dictionary
                         for i in 0..<weakSelf.imageAssets.count {
-                            weakSelf.checkedInfo[i] = -1
+                            weakSelf.checkedInfo[i] = -1 // Unchecked image
                         }
-                        //show data
-                        weakSelf.ibCollectionView.delegate = self
-                        weakSelf.ibCollectionView.dataSource = self
-                        weakSelf.ibCollectionView.reloadData()
+                        DispatchQueue.main.async {
+                            weakSelf.ibCollectionView.delegate = self
+                            weakSelf.ibCollectionView.dataSource = self
+                            weakSelf.ibCollectionView.reloadData()
+                        }
                     }
-                }
-            case .denied, .restricted:
-                break
-            case .notDetermined:
-                break
-            default:
-                break
+                })
             }
         }
-    }
-    
-    private func getAllImages(completion: (_ isExist: Bool) -> Void) {
-        let assets : PHFetchResult = PHAsset.fetchAssets(with: .image, options: self.assetsfetchOptions())
-        let indexSet = IndexSet(integersIn: 0..<assets.count)
-        self.imageAssets = assets.objects(at: indexSet)
-        (imageAssets.count > 0) ? completion(true) : completion(false)
-    }
-    
-    private func assetsfetchOptions() -> PHFetchOptions {
-        let fetchOptions = PHFetchOptions()
-        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
-        fetchOptions.sortDescriptors = [sortDescriptor]
-        return fetchOptions
     }
     
     private func updateSelectedInfoText() {
@@ -170,6 +153,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 //                    }
                 }
             } else {
+                ///Remove this line
+                cell.ibCheckButton.isUserInteractionEnabled = true
+                
                 if let checkedCount = checkedInfo[indexPath.item] {
                     if checkedCount == -1 {
                         cell.ibCountNumber.isHidden = true
