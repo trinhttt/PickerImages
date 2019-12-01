@@ -17,10 +17,9 @@ class ViewController: UIViewController {
     
     // MARK: - Properties
     var imageAssets: [PHAsset] = [PHAsset]()
-    var selectedImageAssets: [PHAsset] = [PHAsset]()
-    var checkedImageIndexs: [Int] = [Int]()
     var removedImageIndex: Int = -1
     var isShowSelectedList: Bool = false
+    var checkedInfo: Dictionary<Int, Int> = [Int : Int]() // [<collectionItemIndex>:<checkedIndex>]
     
     // MARK: - Life cycle
     override func viewDidLoad() {
@@ -67,6 +66,11 @@ class ViewController: UIViewController {
                 self.getAllImages { [weak self] isExist in
                     guard let weakSelf = self else { return }
                     DispatchQueue.main.async {
+                        //init dictionary
+                        for i in 0..<weakSelf.imageAssets.count {
+                            weakSelf.checkedInfo[i] = -1
+                        }
+                        //show data
                         weakSelf.ibCollectionView.delegate = self
                         weakSelf.ibCollectionView.dataSource = self
                         weakSelf.ibCollectionView.reloadData()
@@ -96,55 +100,41 @@ class ViewController: UIViewController {
         return fetchOptions
     }
     
-    private func updateSelectInfoText() {
-        if checkedImageIndexs.count != 0 {
-            ibSelectInfoText.text = "Selected photo: \(checkedImageIndexs.count)"
+    private func updateSelectedInfoText() {
+        let checkedCount = checkedInfo.values.max()
+        if checkedCount != -1 {
+            ibSelectInfoText.text = "Selected photo: \(String(describing: checkedCount ?? 0))"
         } else {
             ibSelectInfoText.text = "Please select photo"
         }
     }
     
-    private func updateCell(at index: Int) {
-        if let removeIndex = checkedImageIndexs.index(of: index) {
-            removedImageIndex = removeIndex
-            for i in removedImageIndex + 1..<checkedImageIndexs.count {
-                removedImageIndex += 1
-                ibCollectionView.reloadItems(at: [IndexPath(row: checkedImageIndexs[i], section: 0)])
+    private func updateCheckedInfo(at index: Int) {
+        if checkedInfo[index] == -1 {
+            if let checkedCount = checkedInfo.values.max() {
+                checkedInfo[index] = checkedCount + 1
             }
-            checkedImageIndexs.remove(at: removeIndex)
-            removedImageIndex = -1
-        }else{
-            checkedImageIndexs.append(index)
+        } else {
+            let needToChangeIndexs = checkedInfo.keys.filter { checkedInfo[$0] ?? -1 > checkedInfo[index] ?? -1}
+            // Update larger count-numbers when unchecked an image
+            for i in needToChangeIndexs {
+                if let countNumber = checkedInfo[i] {
+                    checkedInfo[i] = countNumber - 1
+                }
+            }
+            ibCollectionView.reloadItems(at: needToChangeIndexs.map{IndexPath(row: $0, section: 0)})
+            checkedInfo[index] = -1
         }
-        ibCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
     }
     
     @objc func selectedListTapped() {
         isShowSelectedList = !isShowSelectedList
-        selectedImageAssets.removeAll()
-        for i in checkedImageIndexs {
-            selectedImageAssets.append(imageAssets[i])
-        }
-        
-        //        for i in 0..<imageAssets.count {
-        //            if checkedImageIndexs.contains(i) {
-        //                selectedImageAssets.append(imageAssets[i])
-        //            }
-        //        }
-        
-        //        imageAssets = imageAssets.filter({(asset: PHAsset) -> Bool in
-        //            if let index = imageAssets.index(of: asset) {
-        //                return checkedImageIndexs.contains(index)
-        //            }
-        //            return false
-        //        })
         ibCollectionView.reloadData()
     }
     
     
     // MARK: - IBActions
     @IBAction func ibSelectAllTapped(_ sender: Any) {
-        print(checkedImageIndexs)
     }
 }
 
@@ -153,38 +143,49 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     // MARK: UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isShowSelectedList {
-            return selectedImageAssets.count
+            return checkedInfo.filter{ $0.value != -1 }.count
         } else {
-            return imageAssets.count
+            return checkedInfo.count
         }
     }
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath) as? ImageCollectionViewCell {
-            cell.ibCheckButton.tag = indexPath.row
+            cell.ibCheckButton.tag = indexPath.item
+           
             if isShowSelectedList {
-                cell.ibCountNumber.text = "\(indexPath.row)"
+                let assetIndex = checkedInfo.filter{ $0.value == indexPath.item }.first?.key
                 cell.ibCountNumber.isHidden = false
                 cell.ibCheckButton.backgroundColor = .red
-                cell.setImage(imageAsset: selectedImageAssets[indexPath.row])
+                
+                if let assetIndex = assetIndex {
+                    cell.ibCountNumber.text = "\(String(describing: checkedInfo[assetIndex] ?? 0))"
+                    cell.setImage(imageAsset: imageAssets[assetIndex])
+                    
+                    ///Hande tap button after
+                    cell.ibCheckButton.isUserInteractionEnabled = false
+//                    cell.checkActionHandler = { index in
+//                        self.updateCheckedInfo(at: assetIndex)
+//                        self.ibCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+//                        self.updateSelectedInfoText()
+//                    }
+                }
             } else {
-                if checkedImageIndexs.contains(indexPath.row){
-                    if removedImageIndex == -1 { // append new image
-                        cell.ibCountNumber.text = "\(checkedImageIndexs.count)"
+                if let checkedCount = checkedInfo[indexPath.item] {
+                    if checkedCount == -1 {
+                        cell.ibCountNumber.isHidden = true
+                        cell.ibCheckButton.backgroundColor = .clear
                     } else {
-                        cell.ibCountNumber.text = "\(removedImageIndex)"
+                        cell.ibCountNumber.text = "\(checkedCount)"
+                        cell.ibCountNumber.isHidden = false
+                        cell.ibCheckButton.backgroundColor = .red
                     }
-                    cell.ibCountNumber.isHidden = false
-                    cell.ibCheckButton.backgroundColor = .red
-                }else{
-                    cell.ibCountNumber.isHidden = true
-                    cell.ibCheckButton.backgroundColor = .clear
                 }
+                cell.setImage(imageAsset: imageAssets[indexPath.item])
                 cell.checkActionHandler = { index in
-                    self.updateCell(at: indexPath.row)
-                    self.updateSelectInfoText()
+                    self.updateCheckedInfo(at: index)
+                    self.ibCollectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
+                    self.updateSelectedInfoText()
                 }
-                cell.setImage(imageAsset: imageAssets[indexPath.row])
             }
             return cell
         }
