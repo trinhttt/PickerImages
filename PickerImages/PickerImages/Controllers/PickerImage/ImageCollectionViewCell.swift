@@ -27,9 +27,8 @@ class ImageCollectionViewCell: UICollectionViewCell {
     }
     
     @IBAction func ibCheckTapped(_ sender: Any) {
-        let index = (sender as! UIButton).tag
-        checkActionHandler?(index)
-    }
-    
-    
+        if let sender = sender as? UIButton {
+            checkActionHandler?(sender.tag)
+        }
+    }    
 }

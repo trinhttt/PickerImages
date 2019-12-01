@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class ViewController: UIViewController {
+class ViewController: CommonViewController {
     
     // MARK: - IBOutlet
     @IBOutlet weak var ibCollectionView: UICollectionView!
@@ -34,17 +34,7 @@ class ViewController: UIViewController {
         if let naviController = navigationController {
             let naviBar = naviController.navigationBar
             naviBar.topItem?.title = "Title"
-            naviBar.isTranslucent = false
-            naviBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-            // Bar button color
-            naviBar.tintColor = .white
-            // Navigation background color
-            naviBar.barTintColor = UIColor(hexString: "D80B24")
-            // Remove the navigation shadow
-            naviBar.setBackgroundImage(UIImage(), for: .default)
-            naviBar.shadowImage = UIImage()
         }
-        
         // Right bar button
         let rightBarButtonItem = UIBarButtonItem(title: "Selected list", style: .done, target: self, action: #selector(selectedListTapped))
         self.navigationItem.rightBarButtonItem  = rightBarButtonItem
